@@ -42,7 +42,7 @@
   .nav-item.active .nav-label{color:#fff}
 
   /* MAIN */
-  main{position:relative;z-index:5;max-width:740px;margin:0 auto;padding:138px 14px 80px}
+  main{position:relative;z-index:5;max-width:740px;margin:0 auto;padding:160px 14px 80px}
 
   /* SCREENS */
   .screen{display:none;animation:fadeIn .35s ease}
@@ -138,9 +138,10 @@
 
   /* GRAMMAR */
   .grammar-rule{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:10px;border-right:5px solid var(--purple)}
-  .gr-rule{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--purple);margin-bottom:4px}
-  .gr-example{font-size:.9rem;color:var(--dark);margin-bottom:2px;direction:ltr;text-align:left}
-  .gr-he{font-size:.8rem;color:#aaa}
+  .gr-rule{font-family:'Fredoka One',cursive;font-size:1.05rem;color:var(--purple);margin-bottom:5px}
+  .gr-example{font-size:.88rem;color:var(--dark);margin-bottom:4px;direction:ltr;text-align:left;background:#f9f0ff;border-radius:8px;padding:6px 10px;line-height:1.5}
+  .gr-he{font-size:.8rem;color:#888;margin-top:3px}
+  .gr-lesson-title{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--dark);margin:0 0 14px;display:flex;align-items:center;gap:8px}
 
   /* BUTTONS */
   .btn-primary{background:linear-gradient(135deg,var(--purple),var(--sky));color:#fff;border:none;border-radius:40px;padding:13px 32px;font-family:'Fredoka One',cursive;font-size:1.1rem;cursor:pointer;box-shadow:0 6px 20px rgba(171,71,188,.35);transition:transform .15s,box-shadow .15s}
@@ -250,6 +251,13 @@
         <span class="card-emoji">🗣️</span><h3>משפטים ראשונים</h3><p>I am · I like · I want · I have · I can</p>
       </div>
     </div>
+    <div class="menu-section-title">📐 דקדוק</div>
+    <div class="cards-grid">
+      <div class="card" style="border-color:var(--purple)" onclick="go('grammar-menu')">
+        <div class="badge" id="badge-grammar">פתוח!</div>
+        <span class="card-emoji">📐</span><h3>דקדוק</h3><p id="grammar-count"></p>
+      </div>
+    </div>
     <div class="menu-section-title">🏅 תגים שלי</div>
     <div class="badges-grid" id="badges-grid"></div>
   </div>
@@ -332,6 +340,27 @@
     </div>
     <div class="tabs" id="sent-tabs"></div>
     <div id="sent-subs"></div>
+  </div>
+
+  <!-- GRAMMAR MENU -->
+  <div class="screen" id="screen-grammar-menu">
+    <div class="lesson-header">
+      <button class="btn-back" onclick="go('home')">←</button>
+      <div class="prog-wrap"><div class="prog-fill" style="width:100%"></div></div>
+    </div>
+    <div class="section-title">📐 דקדוק</div>
+    <div class="info-box">בחר/י נושא — תלמד/י את הכלל ואז תתרגל/י!</div>
+    <div class="topic-grid" id="grammar-topics-grid"></div>
+  </div>
+
+  <!-- GRAMMAR LESSON -->
+  <div class="screen" id="screen-grammar">
+    <div class="lesson-header">
+      <button class="btn-back" id="grammar-back-btn">←</button>
+      <div class="prog-wrap"><div class="prog-fill" id="gp" style="width:0%"></div></div>
+      <div class="prog-label" id="gl">0</div>
+    </div>
+    <div id="grammar-content"></div>
   </div>
 
   <!-- WORD QUIZ -->
@@ -435,7 +464,7 @@ const SAVE_KEY = 'english_app_v1';
 let appData = {
   stars: 0,
   streak: { lastDate: null, count: 0 },
-  completed: { vocab: [], alphabet: false, phrases: false },
+  completed: { vocab: [], grammar: [], alphabet: false, phrases: false },
   badges: []
 };
 
@@ -447,7 +476,7 @@ function loadSave() {
       appData.stars    = saved.stars    || 0;
       appData.badges   = saved.badges   || [];
       appData.streak   = { lastDate: null, count: 0, ...saved.streak };
-      appData.completed = { vocab:[], alphabet:false, phrases:false, ...saved.completed };
+      appData.completed = { vocab:[], grammar:[], alphabet:false, phrases:false, ...saved.completed };
     }
   } catch(e) {}
 }
@@ -459,6 +488,7 @@ function persist() {
 
 // ── STATE ───────────────────────────────────────────────────
 let stars = 0, answered = false, lastScreen = null;
+let gLesson = null, gIdx = 0, gScore = 0, gMode = 'lesson';
 let vIdx = 0, vList = [], vSection = null;
 let lqList = [], lqIdx = 0, lqScore = 0;
 let scList = [], scIdx = 0, scScore = 0, scAnswer = [], scPool = [];
@@ -512,6 +542,8 @@ const BADGE_DEFS = [
   { id:'first_vocab',   emoji:'📚', title:'לומד/ת מילים', desc:'סיימת נושא מילים ראשון!' },
   { id:'vocab_5',       emoji:'📖', title:'אוצר מילים',   desc:'סיימת 5 נושאי מילים!' },
   { id:'all_vocab',     emoji:'🏆', title:'מאסטר מילים',  desc:'סיימת את כל נושאי המילים!' },
+  { id:'first_grammar', emoji:'📐', title:'דקדוקאי/ת',    desc:'סיימת שיעור דקדוק ראשון!' },
+  { id:'all_grammar',   emoji:'🎓', title:'מאסטר דקדוק',  desc:'סיימת את כל שיעורי הדקדוק!' },
   { id:'perfect_quiz',  emoji:'💯', title:'מושלם!',       desc:'קיבלת ציון מושלם בחידון!' },
   { id:'streak_3',      emoji:'🔥', title:'3 ימים ברצף',  desc:'אתה/את מדהים/ה — 3 ימים!' },
   { id:'streak_7',      emoji:'🌈', title:'שבוע שלם',     desc:'שבוע שלם של לימוד — וואו!' },
@@ -538,6 +570,11 @@ function recordCompletion(type, id) {
     checkBadge('first_vocab');
     if (appData.completed.vocab.length >= 5) checkBadge('vocab_5');
     if (appData.completed.vocab.length >= vocabTopics.length) checkBadge('all_vocab');
+  } else if (type === 'grammar') {
+    if (!appData.completed.grammar) appData.completed.grammar = [];
+    if (!appData.completed.grammar.includes(id)) { appData.completed.grammar.push(id); persist(); }
+    checkBadge('first_grammar');
+    if (appData.completed.grammar.length >= grammarLessons.length) checkBadge('all_grammar');
   } else if (type === 'alphabet') {
     if (!appData.completed.alphabet) { appData.completed.alphabet = true; persist(); checkBadge('alphabet_done'); }
   } else if (type === 'phrases') {
@@ -578,6 +615,7 @@ function refreshHomeCards() {
     'badge-alphabet': appData.completed.alphabet,
     'badge-vocab':    appData.completed.vocab.length > 0,
     'badge-phrases':  appData.completed.phrases,
+    'badge-grammar':  appData.completed.grammar && appData.completed.grammar.length > 0,
     'badge-reading':  appData.completed.reading && appData.completed.reading.length > 0,
   };
   for (const [id, done] of Object.entries(map)) {
@@ -601,6 +639,7 @@ function go(name){
   if(name==='vocab-menu')   buildVocabMenu();
   if(name==='phrases')      buildPhrases();
   if(name==='sentences')    buildSentences();
+  if(name==='grammar-menu') buildGrammarMenu();
   if(name==='word-quiz')    startWordQuiz();
   if(name==='sent-quiz')    startSentQuiz();
   if(name==='listen-quiz')  startListenQuiz();
@@ -629,6 +668,7 @@ function showComplete(s,msg){
 
 // ── HOME INIT ────────────────────────────────────────────────
 document.getElementById('vocab-topics-count').textContent = vocabTopics.length + ' נושאים';
+document.getElementById('grammar-count').textContent      = grammarLessons.length + ' נושאים';
 
 // ── ALPHABET ────────────────────────────────────────────────
 function buildAlphabet(){
@@ -637,7 +677,7 @@ function buildAlphabet(){
   alphabet.forEach(a=>{
     const d = document.createElement('div'); d.className = 'alpha-card';
     d.innerHTML = `<div class="alpha-pair">${a.L} <span>${a.l}</span></div>`;
-    d.onclick = ()=>{ speak(a.L); d.style.background='#EDE7F6'; setTimeout(()=>d.style.background='',700); };
+    d.onclick = ()=>{ speak('the letter ' + a.L); d.style.background='#EDE7F6'; setTimeout(()=>d.style.background='',700); };
     g.appendChild(d);
   });
 }
@@ -670,7 +710,7 @@ function buildAlphaQ(){
     <div class="q-card" style="padding:32px 20px">
       <div class="q-badge" style="background:var(--purple)">🔤 בוחן אותיות</div>
       <div style="font-size:1.1rem;color:#555;margin:10px 0 6px">האזן/י לאות ובחר/י אותה!</div>
-      <button class="listen-btn" id="aq-listen" onclick="speak('${a.L}')">🔊</button>
+      <button class="listen-btn" id="aq-listen" onclick="speak('the letter ${a.L}')">🔊</button>
       <p style="font-size:.82rem;color:#bbb;margin:4px 0 0">לחץ/י לשמוע שוב</p>
     </div>
     <div class="opts-grid" id="aq-opts">
@@ -679,19 +719,19 @@ function buildAlphaQ(){
           ${o.L}
         </button>`).join('')}
     </div>`;
-  setTimeout(()=>speak(a.L), 400);
+  setTimeout(()=>speak('the letter ' + a.L), 400);
 }
 
 function checkAlphaQ(btn, correct){
   if(answered) return; answered = true;
   document.querySelectorAll('#aq-opts .opt').forEach(b=>b.style.pointerEvents='none');
   if(btn.dataset.v === correct){
-    btn.classList.add('correct'); speak(correct); aqScore++; addStars(1);
+    btn.classList.add('correct'); speak('the letter ' + correct); aqScore++; addStars(1);
     setTimeout(()=>{ aqIdx++; buildAlphaQ(); }, 900);
   } else {
     btn.classList.add('wrong');
     document.querySelectorAll('#aq-opts .opt').forEach(b=>{ if(b.dataset.v===correct) b.classList.add('correct'); });
-    speak(correct);
+    speak('the letter ' + correct);
     appendFeedback(document.getElementById('alpha-quiz-q'),
       `האות הנכונה היא: <strong style="font-size:1.4rem;letter-spacing:2px">${correct}</strong>`,
       ()=>{ aqIdx++; buildAlphaQ(); });
@@ -793,6 +833,98 @@ function buildSentences(){
     });
     subs.appendChild(sub);
   });
+}
+
+// ── GRAMMAR ──────────────────────────────────────────────────
+function buildGrammarMenu(){
+  const g = document.getElementById('grammar-topics-grid'); g.innerHTML = '';
+  grammarLessons.forEach(l=>{
+    const done = appData.completed.grammar && appData.completed.grammar.includes(l.id);
+    const d = document.createElement('div'); d.className = 'topic-btn'+(done?' done':'');
+    d.innerHTML = `<span class="t-emoji">${l.emoji}</span><div class="t-title">${l.title}</div><div class="t-sub">${done ? '✓ הושלם' : l.quiz.length+' שאלות'}</div>`;
+    d.style.borderColor = done ? '#66BB6A' : l.color;
+    d.onclick = ()=>startGrammar(l.id);
+    g.appendChild(d);
+  });
+}
+
+function startGrammar(id){
+  gLesson = grammarLessons.find(l=>l.id===id);
+  gMode = 'lesson'; gIdx = 0; gScore = 0; answered = false;
+  lastScreen = 'grammar-menu';
+  document.getElementById('grammar-back-btn').onclick = ()=>go('grammar-menu');
+  buildGrammarContent(); go('grammar');
+}
+
+function buildGrammarContent(){
+  const el = document.getElementById('grammar-content');
+  document.getElementById('gp').style.width = '0%';
+  document.getElementById('gl').textContent = '';
+  if(gMode === 'lesson'){
+    let html = `<div class="gr-lesson-title">${gLesson.emoji} ${gLesson.title}</div>`;
+    html += `<div class="info-box">קרא/י את הכללים ואז תתרגל/י במבחן! 📖</div>`;
+    gLesson.explanation.forEach(r=>{
+      html += `<div class="grammar-rule">
+        <div class="gr-rule">📌 ${r.rule}</div>
+        <div class="gr-example" dir="ltr">${r.example}</div>
+        <div class="gr-he">${r.he}</div>
+      </div>`;
+    });
+    html += `<div class="btn-row" style="margin-top:20px">
+      <button class="btn-primary" onclick="startGrammarQuiz()">!לבוחן ➡️</button>
+    </div>`;
+    el.innerHTML = html;
+  } else {
+    buildGrammarQ();
+  }
+}
+
+function startGrammarQuiz(){
+  gMode = 'quiz'; gIdx = 0; gScore = 0; answered = false;
+  document.getElementById('grammar-back-btn').onclick = ()=>{ gMode='lesson'; buildGrammarContent(); };
+  buildGrammarQ();
+}
+
+function buildGrammarQ(){
+  if(gIdx >= gLesson.quiz.length){
+    const s = gScore >= gLesson.quiz.length ? 3 : gScore >= Math.ceil(gLesson.quiz.length/2) ? 2 : 1;
+    if(gScore === gLesson.quiz.length) checkBadge('perfect_quiz');
+    addStars(s);
+    recordCompletion('grammar', gLesson.id);
+    showComplete(s, `סיימת "${gLesson.title}"! ענית נכון על ${gScore}/${gLesson.quiz.length} 🎓`);
+    return;
+  }
+  const q = gLesson.quiz[gIdx];
+  const pct = Math.round(gIdx / gLesson.quiz.length * 100);
+  document.getElementById('gp').style.width = pct + '%';
+  document.getElementById('gl').textContent = (gIdx+1) + '/' + gLesson.quiz.length;
+  answered = false;
+  const el = document.getElementById('grammar-content');
+  el.innerHTML = `
+    <div class="q-card">
+      <div class="q-badge" style="background:${gLesson.color}">${gLesson.emoji} ${gLesson.title}</div>
+      <span class="q-img">${q.emoji}</span>
+      <div class="q-text" style="direction:ltr;font-size:1.6rem">${q.q}</div>
+    </div>
+    <div class="opts-grid" id="g-opts">
+      ${shuffle(q.opts).map(o=>`<button class="opt" data-v="${o.replace(/"/g,'&quot;')}" onclick="checkGrammarQ(this,'${q.ans.replace(/'/g,"\\'")}')">${o}</button>`).join('')}
+    </div>`;
+}
+
+function checkGrammarQ(btn, correct){
+  if(answered) return; answered = true;
+  document.querySelectorAll('#g-opts .opt').forEach(b=>b.style.pointerEvents='none');
+  if(btn.dataset.v === correct){
+    btn.classList.add('correct'); speak(correct); gScore++; addStars(1);
+    setTimeout(()=>{ gIdx++; buildGrammarQ(); }, 900);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#g-opts .opt').forEach(b=>{ if(b.dataset.v===correct) b.classList.add('correct'); });
+    speak(correct);
+    appendFeedback(document.getElementById('grammar-content'),
+      `התשובה הנכונה: <strong>${correct}</strong>`,
+      ()=>{ gIdx++; buildGrammarQ(); });
+  }
 }
 
 // ── WORD QUIZ ────────────────────────────────────────────────
@@ -1173,12 +1305,14 @@ const NAV_ITEMS = [
   { id:'grammar',  emoji:'📐', label:'דקדוק',  screen:'grammar-menu' },
 ];
 
+
 const SCREEN_TO_NAV = {
   'home':'home',
   'alphabet':'alphabet', 'alpha-quiz':'alphabet',
   'vocab-menu':'vocab', 'vocab':'vocab',
   'phrases':'speaking',  'sentences':'speaking',
   'grammar-menu':'grammar', 'grammar':'grammar',
+
 
   'word-quiz':'vocab', 'sent-quiz':'speaking', 'listen-quiz':'vocab', 'scramble':'speaking', 'complete':'home',
   'alpha-quiz':'alphabet',
@@ -1212,6 +1346,14 @@ updateStreak();
 buildNav();
 setActiveNav('home');
 refreshHomeCards();
+
+// Dynamically adjust main padding so content always clears the fixed header+nav
+function fixMainPadding(){
+  const h = document.getElementById('top-wrapper').offsetHeight;
+  document.querySelector('main').style.paddingTop = (h + 14) + 'px';
+}
+fixMainPadding();
+window.addEventListener('resize', fixMainPadding);
 </script>
 </body>
 </html>
