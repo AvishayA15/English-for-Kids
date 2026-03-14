@@ -1037,86 +1037,7 @@ const sentenceGroups = [
   },
 ];
 
-// ─────────────────────────────────────────
-//  דקדוק בסיסי
-// ─────────────────────────────────────────
-const grammarLessons = [
-  {
-    id: 'articles',
-    title: 'A / An',
-    emoji: '🔤',
-    color: '#5C6BC0',
-    explanation: [
-      {rule:'A + עיצור', example:'a cat, a dog, a book', he:'לפני מילה שמתחילה בעיצור'},
-      {rule:'An + תנועה', example:'an apple, an egg, an ice cream', he:'לפני מילה שמתחילה ב-A E I O U'},
-    ],
-    quiz: [
-      {q:'___ apple',   opts:['A','An'],    ans:'An',   emoji:'🍎'},
-      {q:'___ dog',     opts:['A','An'],    ans:'A',    emoji:'🐶'},
-      {q:'___ umbrella',opts:['A','An'],    ans:'An',   emoji:'☂️'},
-      {q:'___ car',     opts:['A','An'],    ans:'A',    emoji:'🚗'},
-      {q:'___ elephant',opts:['A','An'],    ans:'An',   emoji:'🐘'},
-      {q:'___ book',    opts:['A','An'],    ans:'A',    emoji:'📚'},
-      {q:'___ orange',  opts:['A','An'],    ans:'An',   emoji:'🍊'},
-      {q:'___ banana',  opts:['A','An'],    ans:'A',    emoji:'🍌'},
-    ]
-  },
-  {
-    id: 'plurals',
-    title: 'יחיד ורבים',
-    emoji: '2️⃣',
-    color: '#EF5350',
-    explanation: [
-      {rule:'רוב המילים: + s', example:'cat → cats, dog → dogs', he:'פשוט להוסיף s'},
-      {rule:'מילות sh/ch/x: + es', example:'box → boxes, dish → dishes', he:'מסתיים ב-sh/ch/x/ss'},
-      {rule:'יוצאי דופן', example:'child → children, mouse → mice', he:'מילים שמשתנות לגמרי'},
-    ],
-    quiz: [
-      {q:'One cat → two ___',    opts:['cats','cates','cat'],      ans:'cats',     emoji:'🐱'},
-      {q:'One box → two ___',    opts:['boxs','boxes','boxies'],   ans:'boxes',    emoji:'📦'},
-      {q:'One child → two ___',  opts:['childs','childes','children'],ans:'children',emoji:'🧒'},
-      {q:'One dog → two ___',    opts:['dogs','doges','dogies'],   ans:'dogs',     emoji:'🐶'},
-      {q:'One dish → two ___',   opts:['dishs','dishes','dishies'],ans:'dishes',   emoji:'🍽️'},
-      {q:'One mouse → two ___',  opts:['mouses','mice','mooses'],  ans:'mice',     emoji:'🐭'},
-    ]
-  },
-  {
-    id: 'colors_adj',
-    title: 'צבעים + שמות עצם',
-    emoji: '🎨',
-    color: '#AB47BC',
-    explanation: [
-      {rule:'צבע לפני השם', example:'a red apple, a blue car', he:'באנגלית הצבע בא לפני!'},
-      {rule:'ללא שינוי', example:'two red apples (לא reds)', he:'הצבע לא משתנה ברבים'},
-    ],
-    quiz: [
-      {q:'תפוח אדום = ___ apple',     opts:['red','apple red','reds'],    ans:'red',    emoji:'🍎'},
-      {q:'כדור כחול = ___ ball',      opts:['ball blue','blue','blues'],   ans:'blue',   emoji:'🔵'},
-      {q:'חתול שחור = ___ cat',       opts:['cat black','blacky','black'], ans:'black',  emoji:'🐱'},
-      {q:'שמש צהובה = ___ sun',       opts:['yellows','yellow','sun yellow'],ans:'yellow',emoji:'☀️'},
-    ]
-  },
-  {
-    id: 'questions',
-    title: 'שאלות בסיסיות',
-    emoji: '❓',
-    color: '#26C6DA',
-    explanation: [
-      {rule:'What = מה',    example:'What is this? / What is your name?', he:'לשאול על דברים'},
-      {rule:'Who = מי',     example:'Who are you? / Who is she?',          he:'לשאול על אנשים'},
-      {rule:'Where = איפה', example:'Where is my bag? / Where do you live?',he:'לשאול על מיקום'},
-      {rule:'How = איך',    example:'How are you? / How old are you?',     he:'לשאול על אופן / מצב'},
-    ],
-    quiz: [
-      {q:'___ is your name?',  opts:['What','Who','Where','How'],  ans:'What',  emoji:'🏷️'},
-      {q:'___ are you?',       opts:['What','Who','Where','How'],  ans:'How',   emoji:'😊'},
-      {q:'___ is my bag?',     opts:['What','Who','Where','How'],  ans:'Where', emoji:'🎒'},
-      {q:'___ is your teacher?',opts:['What','Who','Where','How'], ans:'Who',   emoji:'👩‍🏫'},
-      {q:'___ old are you?',   opts:['What','Who','Where','How'],  ans:'How',   emoji:'🎂'},
-      {q:'___ is this?',       opts:['What','Who','Where','How'],  ans:'What',  emoji:'🤔'},
-    ]
-  },
-];
+// grammarLessons defined below (comprehensive version)
 
 // ─────────────────────────────────────────
 //  שירים וחרוזים
@@ -1238,4 +1159,189 @@ const sentenceQuizData = [
   {q:'יש לך שאלה:',             opts:['I want a question.','I have a question.','I am a question.','Question I have.'],ans:'I have a question.',emoji:'🙋'},
   {q:'אתה/את יכול/ה לשחות:',    opts:['I like to swim.','I am to swim.','I can swim.','Swim I can.'], ans:'I can swim.',           emoji:'🏊'},
   {q:'בן/בת שבע:',              opts:['I am seven years old.','I like seven.','I want seven.','Seven I am.'],ans:'I am seven years old.',emoji:'🎂'},
+];
+
+// ─────────────────────────────────────────
+//  שיעורי דקדוק
+//  כל שיעור: id, emoji, color, title, explanation[], quiz[]
+//  explanation: { rule, example, he }
+//  quiz: { emoji, q, opts[], ans }
+// ─────────────────────────────────────────
+const grammarLessons = [
+  {
+    id: 'to_be',
+    emoji: '🔗',
+    color: '#7C4DFF',
+    title: '"to be" — להיות',
+    explanation: [
+      { rule: 'I am', example: 'I am happy.', he: 'אני שמח/ה.' },
+      { rule: 'You are', example: 'You are kind.', he: 'אתה/את אדיב/ה.' },
+      { rule: 'He / She / It is', example: 'She is tall. The cat is small.', he: 'הוא/היא/זה — משתמשים ב-is' },
+      { rule: 'We / You / They are', example: 'We are friends. They are at school.', he: 'אנחנו/הם/אתם — משתמשים ב-are' },
+      { rule: "קיצורים: I'm, You're, He's, She's, It's, We're, They're", example: "I'm hungry. She's nice. They're late.", he: 'בדיבור יומיומי משתמשים בקיצורים' },
+    ],
+    quiz: [
+      { emoji:'😊', q:'I ___ happy.', opts:['am','is','are','be'], ans:'am' },
+      { emoji:'👦', q:'He ___ my friend.', opts:['am','is','are','be'], ans:'is' },
+      { emoji:'🐱', q:'The cat ___ small.', opts:['am','is','are','be'], ans:'is' },
+      { emoji:'👧👦', q:'We ___ students.', opts:['am','is','are','be'], ans:'are' },
+      { emoji:'🌍', q:'They ___ from Israel.', opts:['am','is','are','be'], ans:'are' },
+      { emoji:'🌤️', q:'It ___ sunny today.', opts:['am','is','are','be'], ans:'is' },
+      { emoji:'👩', q:'She ___ a teacher.', opts:['am','is','are','be'], ans:'is' },
+      { emoji:'🧒', q:'You ___ very smart.', opts:['am','is','are','be'], ans:'are' },
+    ]
+  },
+  {
+    id: 'plural',
+    emoji: '📝',
+    color: '#E91E63',
+    title: 'יחיד ורבים',
+    explanation: [
+      { rule: 'רוב המילים: + s', example: 'cat → cats,  dog → dogs,  book → books', he: 'רוב המילים — פשוט מוסיפים s' },
+      { rule: 'אחרי s / x / ch / sh: + es', example: 'bus → buses,  box → boxes,  church → churches', he: 'אחרי s, x, ch, sh — מוסיפים es' },
+      { rule: 'מסתיים ב-y: y → ies', example: 'baby → babies,  city → cities', he: 'כשנגמר ב-y אחרי עיצור — y הופך ies' },
+      { rule: 'מסתיים ב-f/fe: → ves', example: 'leaf → leaves,  knife → knives', he: 'כשנגמר ב-f או fe — הופך ves' },
+      { rule: 'לא-רגולריים (ללמוד בעל-פה)', example: 'child → children,  mouse → mice,  person → people,  tooth → teeth', he: 'כמה מילים נפוצות משנות צורה לגמרי!' },
+    ],
+    quiz: [
+      { emoji:'🐱', q:'One cat → Two ___', opts:['cats','cates','catses','kittens'], ans:'cats' },
+      { emoji:'🚌', q:'One bus → Two ___', opts:['bus','buses','buss','busi'], ans:'buses' },
+      { emoji:'👶', q:'One baby → Two ___', opts:['babys','babies','babes','babyes'], ans:'babies' },
+      { emoji:'🍃', q:'One leaf → Many ___', opts:['leafs','leaves','leafes','leavs'], ans:'leaves' },
+      { emoji:'🧒', q:'One child → Many ___', opts:['childs','childes','children','childrens'], ans:'children' },
+      { emoji:'🐭', q:'One mouse → Two ___', opts:['mouses','mouse','mice','micees'], ans:'mice' },
+      { emoji:'📦', q:'One box → Two ___', opts:['boxs','box','boxies','boxes'], ans:'boxes' },
+      { emoji:'🏙️', q:'One city → Two ___', opts:['citys','cities','cityes','citys'], ans:'cities' },
+    ]
+  },
+  {
+    id: 'articles',
+    emoji: '🔵',
+    color: '#1565C0',
+    title: 'a, an, the',
+    explanation: [
+      { rule: '"a" — לפני עיצור', example: 'a cat,  a dog,  a big house,  a book', he: 'כשהמילה הבאה מתחילה בעיצור — משתמשים ב-a' },
+      { rule: '"an" — לפני תנועה (a, e, i, o, u)', example: 'an apple,  an elephant,  an orange,  an ice cream', he: 'כשהמילה הבאה מתחילה בתנועה — משתמשים ב-an' },
+      { rule: '"the" — כשמדברים על משהו ספציפי', example: 'The cat is black. Pass me the book, please.', he: 'כבר מכירים / ספציפי — משתמשים ב-the' },
+      { rule: '"the" — יחיד בעולם', example: 'The sun, the moon, the sea, the sky', he: 'דברים יחידניים בעולם — תמיד the' },
+    ],
+    quiz: [
+      { emoji:'🐘', q:'I saw ___ elephant at the zoo.', opts:['a','an','the','—'], ans:'an' },
+      { emoji:'🌞', q:'___ sun is very bright.', opts:['A','An','The','—'], ans:'The' },
+      { emoji:'🐶', q:'She has ___ dog.', opts:['a','an','the','—'], ans:'a' },
+      { emoji:'🍎', q:'He ate ___ apple.', opts:['a','an','the','—'], ans:'an' },
+      { emoji:'📚', q:'___ book on the table is mine.', opts:['A','An','The','—'], ans:'The' },
+      { emoji:'🚗', q:'I want to buy ___ car.', opts:['a','an','the','—'], ans:'a' },
+      { emoji:'🌍', q:'___ Earth goes around the sun.', opts:['A','An','The','—'], ans:'The' },
+      { emoji:'🦉', q:'There is ___ owl in the tree.', opts:['a','an','the','—'], ans:'an' },
+    ]
+  },
+  {
+    id: 'adjectives',
+    emoji: '🎨',
+    color: '#FF6F00',
+    title: 'שמות תואר',
+    explanation: [
+      { rule: 'שם תואר בא לפני שם העצם', example: 'a big dog,  a red apple,  a happy girl', he: 'בניגוד לעברית — באנגלית שם התואר קודם!' },
+      { rule: 'שם תואר אחרי to be', example: 'The dog is big.  She is happy.  They are tired.', he: 'שם תואר יכול לבוא גם אחרי is / are / am' },
+      { rule: 'השוואה: + er (מילה קצרה)', example: 'big → bigger,  tall → taller,  fast → faster', he: 'להשוות מילים קצרות — מוסיפים -er' },
+      { rule: 'השוואה: more (מילה ארוכה)', example: 'beautiful → more beautiful,  expensive → more expensive', he: 'מילות תואר ארוכות — משתמשים ב-more' },
+      { rule: 'עליון: + est / most', example: 'big → the biggest,  happy → the happiest,  beautiful → the most beautiful', he: '"הכי..." — est לקצרות, most לארוכות' },
+    ],
+    quiz: [
+      { emoji:'🐘', q:'The elephant is very ___.', opts:['big','bigging','biggest','more big'], ans:'big' },
+      { emoji:'🌈', q:'Choose the adjective:', opts:['run','beautiful','eat','quickly'], ans:'beautiful' },
+      { emoji:'🦁', q:'A lion is ___ than a cat.', opts:['big','bigger','most big','bigest'], ans:'bigger' },
+      { emoji:'⭐', q:'She is the ___ student in the class.', opts:['smart','smarter','most smart','smartest'], ans:'smartest' },
+      { emoji:'🎈', q:'The balloon is ___.', opts:['fly','red','redly','redding'], ans:'red' },
+      { emoji:'😊', q:'He is ___ than his brother.', opts:['happy','happier','happiest','more happy'], ans:'happier' },
+      { emoji:'🌺', q:'This flower is the ___ in the garden.', opts:['beautiful','more beautiful','most beautiful','beautifulest'], ans:'most beautiful' },
+    ]
+  },
+  {
+    id: 'present_simple',
+    emoji: '⚡',
+    color: '#00897B',
+    title: 'הווה פשוט',
+    explanation: [
+      { rule: 'I / You / We / They + פועל רגיל', example: 'I eat pizza.  You play football.  They run fast.', he: 'עם I, You, We, They — הפועל לא משתנה' },
+      { rule: 'He / She / It + פועל + s', example: 'He eats pizza.  She plays football.  It runs fast.', he: 'עם He, She, It — מוסיפים s לפועל' },
+      { rule: 'פעלים מיוחדים: do/go/have → does/goes/has', example: 'She does her homework.  He goes to school.  It has a tail.', he: 'כמה פעלים נפוצים משנים צורה ב-he/she/it' },
+      { rule: 'שלילה: do not / does not', example: 'I do not eat meat.  She does not play games.', he: 'שלילה: do not (I/You/We/They) / does not (He/She/It)' },
+      { rule: 'שאלה: Do / Does', example: 'Do you like pizza?  Does she know?', he: 'שאלה: Do (I/You/We/They) / Does (He/She/It)' },
+    ],
+    quiz: [
+      { emoji:'🍕', q:'She ___ pizza every day.', opts:['eat','eats','eating','eaten'], ans:'eats' },
+      { emoji:'⚽', q:'They ___ football on Fridays.', opts:['play','plays','playing','played'], ans:'play' },
+      { emoji:'🐕', q:'The dog ___ a lot.', opts:['bark','barks','barking','barked'], ans:'barks' },
+      { emoji:'📚', q:'We ___ books at school.', opts:['read','reads','reading','readed'], ans:'read' },
+      { emoji:'🌙', q:'He ___ early every night.', opts:['sleep','sleeps','sleeping','slept'], ans:'sleeps' },
+      { emoji:'🐱', q:'My cat ___ fish.', opts:['like','likes','liking','liked'], ans:'likes' },
+      { emoji:'🎒', q:'___ you go to school every day?', opts:['Do','Does','Did','Are'], ans:'Do' },
+    ]
+  },
+  {
+    id: 'present_continuous',
+    emoji: '🔄',
+    color: '#43A047',
+    title: 'הווה מתמשך',
+    explanation: [
+      { rule: 'am / is / are + פועל + ing', example: 'I am eating.  She is playing.  They are running.', he: 'to be + פועל עם סיומת ing — לפעולה שקורה עכשיו' },
+      { rule: 'מתי משתמשים?', example: 'Look! The dog is running!  I am studying right now.', he: 'לפעולה שמתרחשת ברגע זה — עכשיו, עכשיו!' },
+      { rule: 'כפילות עיצור (CVC קצר)', example: 'run → running,  sit → sitting,  swim → swimming', he: 'פועל קצר שנגמר בתנועה + עיצור — כפל את האות האחרונה' },
+      { rule: 'מסתיים ב-e — הסר את ה-e', example: 'make → making,  ride → riding,  write → writing', he: 'פועל שנגמר ב-e — מסירים ה-e ואז מוסיפים ing' },
+    ],
+    quiz: [
+      { emoji:'🏃', q:'She ___ in the park right now.', opts:['run','runs','is running','running'], ans:'is running' },
+      { emoji:'📖', q:'They ___ their homework now.', opts:['do','does','are doing','doing'], ans:'are doing' },
+      { emoji:'🍳', q:'Mum ___ dinner at the moment.', opts:['cook','cooks','is cooking','cooking'], ans:'is cooking' },
+      { emoji:'😴', q:'The baby ___ right now.', opts:['sleep','sleeps','is sleeping','sleeping'], ans:'is sleeping' },
+      { emoji:'🎮', q:'I ___ a video game right now.', opts:['play','plays','am playing','playing'], ans:'am playing' },
+      { emoji:'✍️', q:'"sit" + ing = ?', opts:['siting','sitting','siteing','sitteing'], ans:'sitting' },
+      { emoji:'🚴', q:'"ride" + ing = ?', opts:['rideing','ridding','riding','rideing'], ans:'riding' },
+    ]
+  },
+  {
+    id: 'past_simple',
+    emoji: '⏰',
+    color: '#6D4C41',
+    title: 'עבר פשוט',
+    explanation: [
+      { rule: 'פעלים רגולריים: + ed', example: 'play → played,  walk → walked,  watch → watched', he: 'רוב הפעלים — מוסיפים ed' },
+      { rule: 'מסתיים ב-e: + d בלבד', example: 'like → liked,  live → lived,  dance → danced', he: 'כשנגמר ב-e — מוסיפים רק d' },
+      { rule: 'פעלים לא-רגולריים נפוצים', example: 'go → went,  eat → ate,  see → saw,  come → came,  have → had,  make → made', he: 'הפעלים הנפוצים ביותר — חובה לשנן!' },
+      { rule: 'שלילה: did not (לכולם)', example: 'I did not go.  She did not eat.  They did not come.', he: 'שלילה: did not + פועל בסיסי — לכולם אותו דבר' },
+      { rule: 'שאלה: Did (לכולם)', example: 'Did you go?  Did she eat?  Did they win?', he: 'שאלה: Did + פועל בסיסי — לכולם אותו דבר' },
+    ],
+    quiz: [
+      { emoji:'⚽', q:'Yesterday, he ___ football.', opts:['play','plays','playing','played'], ans:'played' },
+      { emoji:'🚶', q:'We ___ to school this morning.', opts:['go','goes','went','gone'], ans:'went' },
+      { emoji:'🍕', q:'She ___ pizza for lunch.', opts:['eat','eats','eating','ate'], ans:'ate' },
+      { emoji:'👀', q:'I ___ a rainbow yesterday.', opts:['see','sees','saw','seen'], ans:'saw' },
+      { emoji:'📺', q:'They ___ a film last night.', opts:['watch','watches','watching','watched'], ans:'watched' },
+      { emoji:'🛌', q:'The baby ___ for 10 hours.', opts:['sleep','sleeps','slept','sleeping'], ans:'slept' },
+      { emoji:'🙅', q:'___ she come to the party?', opts:['Do','Does','Did','Was'], ans:'Did' },
+    ]
+  },
+  {
+    id: 'future_will',
+    emoji: '🚀',
+    color: '#1976D2',
+    title: "עתיד עם 'will'",
+    explanation: [
+      { rule: 'will + פועל בסיסי — לכולם!', example: 'I will go.  She will eat.  They will play.  He will come.', he: 'will + פועל — אותו דבר לכל הגופים, ללא שינוי!' },
+      { rule: "קיצור: 'll", example: "I'll go.  She'll eat.  They'll come.  We'll win!", he: "בדיבור יומיומי — 'll במקום will" },
+      { rule: "שלילה: will not / won't", example: "I won't go.  She will not eat.  They won't come.", he: "שלילה: will not = won't" },
+      { rule: 'שאלה: Will + נושא + פועל?', example: 'Will you come?  Will she help?  Will it rain?', he: 'שאלה — Will קודם לנושא' },
+    ],
+    quiz: [
+      { emoji:'☀️', q:'Tomorrow it ___ sunny.', opts:['is','was','will be','being'], ans:'will be' },
+      { emoji:'🎂', q:'She ___ 10 years old next week.', opts:['is','was','will be','been'], ans:'will be' },
+      { emoji:'✈️', q:'We ___ to London next year.', opts:['go','went','will go','going'], ans:'will go' },
+      { emoji:'📚', q:'He ___ hard for the test.', opts:['study','studied','will study','studying'], ans:'will study' },
+      { emoji:'🌧️', q:'I think it ___ rain today.', opts:['is','was','will','wills'], ans:'will' },
+      { emoji:'🤝', q:'___ you help me, please?', opts:['Do','Did','Will','Are'], ans:'Will' },
+      { emoji:'🏆', q:"___ they win the match?", opts:['Do','Did','Will','Are'], ans:'Will' },
+    ]
+  },
 ];
