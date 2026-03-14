@@ -177,7 +177,7 @@
   .listen-btn:active{transform:scale(.95)}
 
   /* SCRAMBLE */
-  .scramble-zone{background:#fff;border-radius:18px;padding:14px;box-shadow:var(--shadow);min-height:62px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;margin-bottom:10px}
+  .scramble-zone{background:#fff;border-radius:18px;padding:14px;box-shadow:var(--shadow);min-height:62px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;margin-bottom:10px;direction:ltr;justify-content:flex-start}
   .scramble-zone.answer-zone{border:2px solid var(--sky)}
   .scramble-zone.pool-zone{border:2px dashed #ddd;background:rgba(255,255,255,.5)}
   .zone-label{font-family:'Fredoka One',cursive;font-size:.8rem;color:#bbb;margin-bottom:6px}
@@ -376,7 +376,7 @@
   <!-- SENT QUIZ -->
   <div class="screen" id="screen-sent-quiz">
     <div class="lesson-header">
-      <button class="btn-back" onclick="go('home')">←</button>
+      <button class="btn-back" onclick="go('sentences')">←</button>
       <div class="prog-wrap"><div class="prog-fill" id="sqp" style="width:0%"></div></div>
       <div class="prog-label" id="sql">0/10</div>
     </div>
@@ -425,7 +425,7 @@
   <!-- SCRAMBLE -->
   <div class="screen" id="screen-scramble">
     <div class="lesson-header">
-      <button class="btn-back" onclick="go('home')">←</button>
+      <button class="btn-back" onclick="go('phrases')">←</button>
       <div class="prog-wrap"><div class="prog-fill" id="scp" style="width:0%"></div></div>
       <div class="prog-label" id="scl">0/8</div>
     </div>
@@ -671,13 +671,21 @@ document.getElementById('vocab-topics-count').textContent = vocabTopics.length +
 document.getElementById('grammar-count').textContent      = grammarLessons.length + ' נושאים';
 
 // ── ALPHABET ────────────────────────────────────────────────
+const LETTER_SOUNDS = {
+  A:'a',B:'bee',C:'see',D:'dee',E:'ee',F:'ef',G:'gee',H:'aitch',
+  I:'eye',J:'jay',K:'kay',L:'el',M:'em',N:'en',O:'oh',P:'pee',
+  Q:'cue',R:'r',S:'ess',T:'tee',U:'you',V:'vee',W:'double you',
+  X:'ex',Y:'why',Z:'zee'
+};
+function speakLetter(L){ speak(LETTER_SOUNDS[L] || L); }
+
 function buildAlphabet(){
   recordCompletion('alphabet');
   const g = document.getElementById('alpha-grid'); g.innerHTML = '';
   alphabet.forEach(a=>{
     const d = document.createElement('div'); d.className = 'alpha-card';
     d.innerHTML = `<div class="alpha-pair">${a.L} <span>${a.l}</span></div>`;
-    d.onclick = ()=>{ speak('the letter ' + a.L); d.style.background='#EDE7F6'; setTimeout(()=>d.style.background='',700); };
+    d.onclick = ()=>{ speakLetter(a.L); d.style.background='#EDE7F6'; setTimeout(()=>d.style.background='',700); };
     g.appendChild(d);
   });
 }
@@ -710,7 +718,7 @@ function buildAlphaQ(){
     <div class="q-card" style="padding:32px 20px">
       <div class="q-badge" style="background:var(--purple)">🔤 בוחן אותיות</div>
       <div style="font-size:1.1rem;color:#555;margin:10px 0 6px">האזן/י לאות ובחר/י אותה!</div>
-      <button class="listen-btn" id="aq-listen" onclick="speak('the letter ${a.L}')">🔊</button>
+      <button class="listen-btn" id="aq-listen" onclick="speakLetter('${a.L}')">🔊</button>
       <p style="font-size:.82rem;color:#bbb;margin:4px 0 0">לחץ/י לשמוע שוב</p>
     </div>
     <div class="opts-grid" id="aq-opts">
@@ -719,19 +727,19 @@ function buildAlphaQ(){
           ${o.L}
         </button>`).join('')}
     </div>`;
-  setTimeout(()=>speak('the letter ' + a.L), 400);
+  setTimeout(()=>speakLetter(a.L), 400);
 }
 
 function checkAlphaQ(btn, correct){
   if(answered) return; answered = true;
   document.querySelectorAll('#aq-opts .opt').forEach(b=>b.style.pointerEvents='none');
   if(btn.dataset.v === correct){
-    btn.classList.add('correct'); speak('the letter ' + correct); aqScore++; addStars(1);
+    btn.classList.add('correct'); speakLetter(correct); aqScore++; addStars(1);
     setTimeout(()=>{ aqIdx++; buildAlphaQ(); }, 900);
   } else {
     btn.classList.add('wrong');
     document.querySelectorAll('#aq-opts .opt').forEach(b=>{ if(b.dataset.v===correct) b.classList.add('correct'); });
-    speak('the letter ' + correct);
+    speakLetter(correct);
     appendFeedback(document.getElementById('alpha-quiz-q'),
       `האות הנכונה היא: <strong style="font-size:1.4rem;letter-spacing:2px">${correct}</strong>`,
       ()=>{ aqIdx++; buildAlphaQ(); });
@@ -759,7 +767,20 @@ function startVocab(id){
 }
 
 function buildVocabQ(){
-  if(vIdx >= vList.length){ addStars(3); recordCompletion('vocab', vSection.id); showComplete(3, `סיימת "${vSection.title}"! מצוין! 🎉`); return; }
+  if(vIdx >= vList.length){
+    addStars(3); recordCompletion('vocab', vSection.id);
+    document.getElementById('vocab-q').innerHTML = `
+      <div style="text-align:center;padding:40px 20px">
+        <div style="font-size:4.5rem;margin-bottom:12px">🎉</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--purple);margin-bottom:8px">כל הכבוד!</div>
+        <div style="font-size:.95rem;color:#888;margin-bottom:6px">סיימת את "${vSection.title}"!</div>
+        <div style="font-size:1.8rem;margin-bottom:24px">⭐⭐⭐</div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="go('vocab-menu')">← חזרה לנושאים</button>
+        </div>
+      </div>`;
+    return;
+  }
   const v = vList[vIdx];
   document.getElementById('vp').style.width = Math.round(vIdx/vList.length*100)+'%';
   document.getElementById('vl').textContent = vIdx+'/'+vList.length;
@@ -1212,17 +1233,22 @@ function buildReadingContent(){
 
 function buildReadingFlash(){
   if(rdIdx >= rdList.length){
-    rdMode = 'quiz'; rdIdx = 0;
-    buildReadingContent(); return;
+    if (!appData.completed.reading) appData.completed.reading = [];
+    if (rdSection && !appData.completed.reading.includes(rdSection.id)){
+      appData.completed.reading.push(rdSection.id); persist();
+    }
+    addStars(3);
+    showComplete(3, rdSection ? `סיימת "${rdSection.title}"! 📖` : 'סיימת בוחן קריאה כללי! 🎲');
+    return;
   }
   const w = rdList[rdIdx];
-  const pct = Math.round(rdIdx / rdList.length * 50);
+  const pct = Math.round((rdIdx+1) / rdList.length * 100);
   document.getElementById('rp').style.width = pct+'%';
-  document.getElementById('rl').textContent = rdIdx+'/'+rdList.length;
+  document.getElementById('rl').textContent = (rdIdx+1)+'/'+rdList.length;
   document.getElementById('reading-content').innerHTML = `
-    <div class="info-box">שלב 1: לימוד מילים — קרא/י וזכור/י!</div>
+    <div class="info-box">לימוד מילים — קרא/י, האזן/י וזכור/י! 📖</div>
     <div class="q-card">
-      <div class="q-badge" style="background:${rdSection.color}">${rdSection.title}</div>
+      <div class="q-badge" style="background:${rdSection ? rdSection.color : 'var(--purple)'}">${rdSection ? rdSection.title : '📚 ללמוד לקרוא'}</div>
       <span class="q-img">${w.emoji}</span>
       <div class="flash-word">${w.en}</div>
       <div style="color:#aaa;font-size:.85rem;margin-bottom:8px">${w.he}</div>
@@ -1231,7 +1257,7 @@ function buildReadingFlash(){
       </div>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="rdIdx++;buildReadingContent()">הבנתי! ➡️</button>
+      <button class="btn-primary" onclick="rdIdx++;buildReadingContent()">הבא ➡️</button>
     </div>`;
   setTimeout(()=>speak(w.en), 350);
 }
@@ -1299,8 +1325,8 @@ function checkReadingQ(btn, correct, he, emoji){
 const NAV_ITEMS = [
   { id:'home',     emoji:'🏠', label:'בית',    screen:'home' },
   { id:'alphabet', emoji:'🔤', label:'אלפבית', screen:'alphabet' },
-  { id:'reading',  emoji:'📖', label:'קריאה',  screen:'reading-menu' },
   { id:'vocab',    emoji:'📚', label:'מילים',  screen:'vocab-menu' },
+  { id:'reading',  emoji:'📖', label:'קריאה',  screen:'reading-menu' },
   { id:'speaking', emoji:'🗣️', label:'דיבור',  screen:'phrases' },
   { id:'grammar',  emoji:'📐', label:'דקדוק',  screen:'grammar-menu' },
 ];
