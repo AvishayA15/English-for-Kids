@@ -137,7 +137,7 @@ const vocabTopics = [
     emoji: '🏠',
     color: '#FFA726',
     words: [
-      {en:'Table',  he:'שולחן', emoji:'🍽️'},
+      {en:'Table',  he:'שולחן', emoji:'📋'},
       {en:'Chair',  he:'כיסא',  emoji:'🪑'},
       {en:'Bed',    he:'מיטה',  emoji:'🛏️'},
       {en:'Door',   he:'דלת',   emoji:'🚪'},
@@ -505,7 +505,7 @@ const vocabTopics = [
       {en:'Crab',      he:'סרטן',      emoji:'🦀'},
       {en:'Jellyfish', he:'מדוזה',     emoji:'🪼'},
       {en:'Turtle',    he:'צב ים',     emoji:'🐢'},
-      {en:'Seahorse',  he:'סוסון ים',  emoji:'🦄'},
+      {en:'Seahorse',  he:'סוסון ים',  emoji:'🐡'},
       {en:'Starfish',  he:'כוכב ים',   emoji:'⭐'},
     ]
   },
@@ -542,7 +542,7 @@ const vocabTopics = [
       {en:'Snail',     he:'חילזון', emoji:'🐌'},
       {en:'Worm',      he:'תולעת',  emoji:'🪱'},
       {en:'Mosquito',  he:'יתוש',   emoji:'🦟'},
-      {en:'Dragonfly', he:'שפירית', emoji:'🪲'},
+      {en:'Dragonfly', he:'שפירית', emoji:'🦗'},
     ]
   },
   {
