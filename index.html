@@ -194,6 +194,35 @@
   /* READING FLASHCARD WORD */
   .flash-word{font-family:'Fredoka One',cursive;font-size:3rem;color:var(--dark);text-align:center;letter-spacing:4px;margin:12px 0 6px;direction:ltr;line-height:1.1}
 
+  /* GAMES */
+  .game-chips{display:flex;gap:8px;overflow-x:auto;padding:6px 4px 12px;margin-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+  .game-chip{flex:0 0 auto;width:54px;height:54px;border-radius:50%;background:#fff;border:3px solid #e0e0e0;font-size:1.7rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,border-color .15s}
+  .game-chip.active{border-color:var(--purple);background:#F3E5F5;transform:scale(1.12);box-shadow:0 4px 14px rgba(171,71,188,.35)}
+  .big-opt{font-size:3.4rem;padding:20px 10px}
+  .big-pic{display:block;font-size:7rem;line-height:1.1;margin:6px 0 10px}
+  .game-row{display:flex;gap:18px;justify-content:center;align-items:center;margin:10px 0 4px}
+  .listen-btn.small{width:68px;height:68px;font-size:2rem;margin:0}
+  .mic-btn{width:96px;height:96px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--coral),var(--pink));color:#fff;font-size:3rem;cursor:pointer;box-shadow:0 8px 24px rgba(255,112,67,.4);transition:transform .15s}
+  .mic-btn:active{transform:scale(.94)}
+  .mic-btn.listening{animation:micPulse 1s ease-out infinite}
+  @keyframes micPulse{0%{box-shadow:0 0 0 0 rgba(255,112,67,.65)}100%{box-shadow:0 0 0 28px rgba(255,112,67,0)}}
+  .si-status{min-height:3em;margin-top:12px;font-size:1rem;color:#555;line-height:1.5}
+  .si-status strong{font-family:'Fredoka One',cursive;color:var(--purple);direction:ltr;display:inline-block}
+  .parrot-bubble{min-height:2.4em;background:#E8F5E9;border-radius:16px;padding:8px 14px;display:inline-block;font-weight:800;color:#2E7D32}
+  .btn-primary:disabled{opacity:.45;cursor:default;box-shadow:none}
+  .speed-hud{display:flex;justify-content:space-between;align-items:center;font-family:'Fredoka One',cursive;font-size:1.4rem;margin-bottom:10px;padding:0 6px}
+  .sp-combo{color:var(--coral)}
+  .timer-fill{transition:width 1s linear;background:linear-gradient(90deg,var(--coral),var(--sun))}
+  .balloon-field{position:relative;height:54vh;min-height:300px;background:linear-gradient(#B3E5FC,#E1F5FE);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  .balloon{position:absolute;top:100%;width:78px;height:94px;border:none;border-radius:50% 50% 48% 48%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.4rem;line-height:1;animation:balloonUp linear infinite;box-shadow:inset -8px -8px 0 rgba(0,0,0,.12),0 6px 14px rgba(0,0,0,.15)}
+  .balloon::after{content:'';position:absolute;bottom:-20px;left:50%;width:2px;height:20px;background:rgba(0,0,0,.3)}
+  .b-emoji{display:inline-block}
+  .b-emoji.wobble{animation:shake .4s ease}
+  @keyframes balloonUp{from{top:100%}to{top:-130px}}
+  .balloon.pop{animation:balloonPop .35s ease-out forwards;pointer-events:none}
+  @keyframes balloonPop{to{transform:scale(1.7);opacity:0}}
+  @media (prefers-reduced-motion:reduce){.mic-btn.listening{animation:none}.balloon{animation-duration:45s!important}}
+
   /* TOAST */
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#fff;border-radius:20px;padding:14px 20px;box-shadow:0 8px 32px rgba(0,0,0,.22);z-index:999;display:flex;align-items:center;gap:14px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);min-width:260px;max-width:340px}
   .toast.show{transform:translateX(-50%) translateY(0)}
@@ -224,6 +253,15 @@
       <span class="big-emoji">🦁</span>
       <h1>!שלום, חבר/ה</h1>
       <p>בחר/י נושא ותתחיל/י ללמוד אנגלית</p>
+    </div>
+    <div class="menu-section-title">🎮 משחקים</div>
+    <div class="cards-grid">
+      <div class="card" style="border-color:var(--teal)" onclick="go('games')">
+        <span class="card-emoji">🎮</span><h3>משחקי האזנה ודיבור</h3><p>בלי לקרוא — רק לשמוע ולדבר</p>
+      </div>
+      <div class="card" style="border-color:var(--sun)" onclick="go('speed')">
+        <span class="card-emoji">⚡</span><h3>סיבוב מהיר</h3><p id="speed-best-label">60 שניות!</p>
+      </div>
     </div>
     <div class="menu-section-title">📖 בסיס הידע</div>
     <div class="cards-grid">
@@ -415,11 +453,61 @@
   <!-- LISTEN QUIZ -->
   <div class="screen" id="screen-listen-quiz">
     <div class="lesson-header">
-      <button class="btn-back" onclick="go('vocab-menu')">←</button>
+      <button class="btn-back" onclick="go('games')">←</button>
       <div class="prog-wrap"><div class="prog-fill" id="lqp" style="width:0%"></div></div>
       <div class="prog-label" id="lql">0/10</div>
     </div>
     <div id="listen-quiz-q"></div>
+  </div>
+
+  <!-- GAMES HUB -->
+  <div class="screen" id="screen-games">
+    <div class="lesson-header">
+      <button class="btn-back" onclick="go('home')">←</button>
+      <div class="prog-wrap"><div class="prog-fill" style="width:100%"></div></div>
+    </div>
+    <div class="section-title">🎮 משחקי האזנה ודיבור</div>
+    <div class="info-box">בלי קריאה! שומעים 🔊, מסתכלים על הציורים ואומרים בקול 🗣️</div>
+    <div class="menu-section-title">על מה נשחק?  <span id="game-topic-label" style="color:var(--purple)"></span></div>
+    <div class="game-chips" id="game-chips"></div>
+    <div class="cards-grid" id="games-grid"></div>
+  </div>
+
+  <!-- SPEED ROUND -->
+  <div class="screen" id="screen-speed">
+    <div class="lesson-header">
+      <button class="btn-back" onclick="go('games')">←</button>
+      <div class="prog-wrap"><div class="prog-fill timer-fill" id="spp" style="width:100%"></div></div>
+      <div class="prog-label" id="spl">60</div>
+    </div>
+    <div id="speed-q"></div>
+  </div>
+
+  <div class="screen" id="screen-sayit">
+    <div class="lesson-header">
+      <button class="btn-back" onclick="go('games')">←</button>
+      <div class="prog-wrap"><div class="prog-fill" id="sip" style="width:0%"></div></div>
+      <div class="prog-label" id="sil"></div>
+    </div>
+    <div id="sayit-q"></div>
+  </div>
+
+  <div class="screen" id="screen-echo">
+    <div class="lesson-header">
+      <button class="btn-back" onclick="go('games')">←</button>
+      <div class="prog-wrap"><div class="prog-fill" id="ecp" style="width:0%"></div></div>
+      <div class="prog-label" id="ecl"></div>
+    </div>
+    <div id="echo-q"></div>
+  </div>
+
+  <div class="screen" id="screen-balloons">
+    <div class="lesson-header">
+      <button class="btn-back" onclick="go('games')">←</button>
+      <div class="prog-wrap"><div class="prog-fill" id="blp" style="width:0%"></div></div>
+      <div class="prog-label" id="bll"></div>
+    </div>
+    <div id="balloon-q"></div>
   </div>
 
   <!-- SCRAMBLE -->
@@ -465,7 +553,8 @@ let appData = {
   stars: 0,
   streak: { lastDate: null, count: 0 },
   completed: { vocab: [], grammar: [], alphabet: false, phrases: false },
-  badges: []
+  badges: [],
+  speedBest: 0
 };
 
 function loadSave() {
@@ -475,6 +564,7 @@ function loadSave() {
       const saved = JSON.parse(raw);
       appData.stars    = saved.stars    || 0;
       appData.badges   = saved.badges   || [];
+      appData.speedBest = saved.speedBest || 0;
       appData.streak   = { lastDate: null, count: 0, ...saved.streak };
       appData.completed = { vocab:[], grammar:[], alphabet:false, phrases:false, ...saved.completed };
     }
@@ -509,11 +599,12 @@ let sqIdx = 0, sqScore = 0;
 })();
 
 // ── SPEECH ──────────────────────────────────────────────────
-function speak(t){
-  if(!window.speechSynthesis) return;
+function speak(t, rate, onend){
+  if(!window.speechSynthesis){ if(onend) setTimeout(onend, 700); return; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(t);
-  u.lang = 'en-US'; u.rate = 0.82; u.pitch = 1.1;
+  u.lang = 'en-US'; u.rate = rate || 0.82; u.pitch = 1.1;
+  if(onend){ u.onend = onend; u.onerror = onend; }
   speechSynthesis.speak(u);
 }
 
@@ -547,6 +638,9 @@ const BADGE_DEFS = [
   { id:'perfect_quiz',  emoji:'💯', title:'מושלם!',       desc:'קיבלת ציון מושלם בחידון!' },
   { id:'streak_3',      emoji:'🔥', title:'3 ימים ברצף',  desc:'אתה/את מדהים/ה — 3 ימים!' },
   { id:'streak_7',      emoji:'🌈', title:'שבוע שלם',     desc:'שבוע שלם של לימוד — וואו!' },
+  { id:'first_game',    emoji:'🎮', title:'שחקן/ית',      desc:'סיימת משחק ראשון!' },
+  { id:'speed_star',    emoji:'⚡', title:'ברק',          desc:'12 מילים או יותר בסיבוב מהיר!' },
+  { id:'talker',        emoji:'🎤', title:'מדברים אנגלית', desc:'אמרת 6 מילים נכון ב"תגידו את זה"!' },
 ];
 
 function checkBadge(id) {
@@ -624,11 +718,14 @@ function refreshHomeCards() {
     el.textContent = done ? '✓ הושלם' : 'פתוח!';
     done ? el.classList.add('done-badge') : el.classList.remove('done-badge');
   }
+  const sb = document.getElementById('speed-best-label');
+  if (sb) sb.textContent = appData.speedBest ? 'השיא שלך: ' + appData.speedBest : '60 שניות!';
   buildBadgesGrid();
 }
 
 // ── NAV ─────────────────────────────────────────────────────
 function go(name){
+  if(typeof stopGames === 'function') stopGames();
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   window.scrollTo(0,0);
@@ -643,6 +740,11 @@ function go(name){
   if(name==='word-quiz')    startWordQuiz();
   if(name==='sent-quiz')    startSentQuiz();
   if(name==='listen-quiz')  startListenQuiz();
+  if(name==='games')        buildGames();
+  if(name==='speed')        startSpeed();
+  if(name==='sayit')        startSayIt();
+  if(name==='echo')         startEcho();
+  if(name==='balloons')     startBalloons();
   if(name==='scramble')     startScramble();
   if(name==='reading-menu') buildReadingMenu();
   if(name==='reading')      buildReadingContent();
@@ -1054,10 +1156,101 @@ function appendFeedback(container, html, advanceFn) {
   container.appendChild(fb);
 }
 
-// ── LISTEN QUIZ ──────────────────────────────────────────────
+// ── GAMES: picture + sound, no reading needed ───────────────
+// Only words whose emoji is unique (no "cat/kitten" clashes) and that are easy to picture.
+const GAME_SKIP = ['days','months','time','adjectives1','adjectives2','verbs1','verbs2','numbers2','numbers3','colors2'];
+// Words whose emoji does not clearly show the word (no good emoji exists, or it looks like another word).
+// Fine on a flashcard that also shows the text, but misleading when the picture IS the question.
+// Remove a word from this list once you give it a better emoji in data.js.
+const GAME_SKIP_WORDS = new Set([
+  'head','eraser','prehistoric','extinct','excavate','fence','guinea pig','harp','satellite','swing','monkey bars',
+  'hide and seek','elbow','cheek','back','knee','belly','hair','microwave','comb','uncle','friend','giant','walrus',
+  'warm','table','pajamas','tablet','charger','bottle','pot','cross','rectangle','seahorse','sand','submarine',
+  'iceberg','watering can','market','black hole','seesaw','jump rope','shy','bored','cycling','internet'
+]);
+let gameTopic = 'all';
+let _gameBank = null;
+
+function gameBank(){
+  if(_gameBank) return _gameBank;
+  const clash = {}, seen = {};
+  const pool = vocabTopics.filter(t => !GAME_SKIP.includes(t.id))
+    .flatMap(t => t.words.map(w => ({en:w.en, he:w.he, emoji:w.emoji, topic:t.id})))
+    .filter(w => !GAME_SKIP_WORDS.has(w.en.toLowerCase()));
+  pool.forEach(w => { (clash[w.emoji] = clash[w.emoji] || {})[w.en.toLowerCase()] = 1; });
+  _gameBank = pool.filter(w => {
+    if(Object.keys(clash[w.emoji]).length > 1) return false;
+    const k = w.en.toLowerCase();
+    if(seen[k]) return false;
+    seen[k] = 1; return true;
+  });
+  return _gameBank;
+}
+function gameTargets(){
+  const b = gameBank();
+  const t = gameTopic === 'all' ? b : b.filter(w => w.topic === gameTopic);
+  return t.length >= 3 ? t : b;
+}
+// n picture choices including the answer; distractors come from the chosen topic when it is big enough
+function gameOptions(w, n){
+  let pool = gameTargets().filter(x => x.en !== w.en);
+  if(pool.length < n-1) pool = gameBank().filter(x => x.en !== w.en);
+  return shuffle([w, ...shuffle(pool).slice(0, n-1)]);
+}
+function topicLabel(){
+  if(gameTopic === 'all') return '🎲 כל הנושאים';
+  const t = vocabTopics.find(x => x.id === gameTopic);
+  return t ? t.emoji + ' ' + t.title : '';
+}
+
+const GAME_DEFS = [
+  {id:'listen-quiz', emoji:'👂', title:'מה שמעת?',       sub:'שומעים ובוחרים את הציור', color:'var(--teal)'},
+  {id:'speed',       emoji:'⚡', title:'סיבוב מהיר',      sub:'60 שניות — כמה תספיקו?',  color:'var(--sun)'},
+  {id:'sayit',       emoji:'🎤', title:'תגידו את זה!',    sub:'אומרים והאפליקציה מקשיבה', color:'var(--coral)'},
+  {id:'echo',        emoji:'🦜', title:'התוכי החוזר',     sub:'שומעים ואומרים אחריו',    color:'var(--grass)'},
+  {id:'balloons',    emoji:'🎈', title:'פוצצו בלונים',    sub:'שומעים ומפוצצים את הנכון', color:'var(--pink)'},
+];
+
+function buildGames(){
+  const chips = document.getElementById('game-chips'); chips.innerHTML = '';
+  const bank = gameBank();
+  const mk = (id, emoji, title) => {
+    const b = document.createElement('button');
+    b.className = 'game-chip' + (gameTopic === id ? ' active' : '');
+    b.textContent = emoji; b.title = title; b.setAttribute('aria-label', title);
+    b.onclick = () => { gameTopic = id; buildGames(); };
+    chips.appendChild(b);
+  };
+  mk('all', '🎲', 'כל הנושאים');
+  vocabTopics.forEach(t => { if(bank.filter(w => w.topic === t.id).length >= 3) mk(t.id, t.emoji, t.title); });
+  document.getElementById('game-topic-label').textContent = topicLabel();
+  const act = chips.querySelector('.active');
+  if(act) chips.scrollLeft = Math.max(0, act.offsetLeft - chips.clientWidth/2 + 27);
+  const grid = document.getElementById('games-grid'); grid.innerHTML = '';
+  GAME_DEFS.forEach(g => {
+    const d = document.createElement('div'); d.className = 'card'; d.style.borderColor = g.color;
+    d.innerHTML = `<span class="card-emoji">${g.emoji}</span><h3>${g.title}</h3><p>${g.sub}</p>`;
+    d.onclick = () => go(g.id);
+    grid.appendChild(d);
+  });
+}
+
+function stopGames(){
+  clearInterval(spTimer); spActive = false;
+  clearInterval(blTimer); blTimer = null;
+  ecTok++;
+  if(siRec){ try{ siRec.abort(); }catch(e){} siRec = null; }
+  siBusy = false;
+  if(window.speechSynthesis) speechSynthesis.cancel();
+}
+
+function gameDone(){ checkBadge('first_game'); }
+
+// ── 1. LISTEN & CHOOSE ───────────────────────────────────────
+// Hear a word, tap the matching picture. Two tries per word, then the answer is shown.
+let lqMiss = 0;
 function startListenQuiz(){
-  const pool = vocabTopics.flatMap(t => t.words);
-  lqList = shuffle(pool).slice(0,10); lqIdx = 0; lqScore = 0; answered = false;
+  lqList = shuffle(gameTargets()).slice(0,10); lqIdx = 0; lqScore = 0; answered = false;
   lastScreen = 'listen-quiz';
   buildListenQ();
 }
@@ -1066,46 +1259,337 @@ function buildListenQ(){
   if(lqIdx >= lqList.length){
     const s = lqScore>=8?3:lqScore>=5?2:1;
     if(lqScore === lqList.length) checkBadge('perfect_quiz');
+    gameDone();
     addStars(s); showComplete(s, `ענית נכון על ${lqScore} מתוך ${lqList.length}!`); return;
   }
   const w = lqList[lqIdx];
   document.getElementById('lqp').style.width = Math.round(lqIdx/lqList.length*100)+'%';
   document.getElementById('lql').textContent = lqIdx+'/'+lqList.length;
-  const pool = vocabTopics.flatMap(t => t.words);
-  const wrong = shuffle(pool.filter(x => x.en !== w.en)).slice(0,3);
-  const opts  = shuffle([...wrong, w]);
-  answered = false;
+  const opts = gameOptions(w, 4);
+  answered = false; lqMiss = 0;
   document.getElementById('listen-quiz-q').innerHTML = `
     <div class="q-card">
-      <div class="q-badge" style="background:var(--teal)">👂 חידון האזנה</div>
+      <div class="q-badge" style="background:var(--teal)">👂 מה שמעת?</div>
       <div style="text-align:center">
-        <button class="listen-btn" onclick="speak('${w.en.replace(/'/g,"\\'")}')">🔊</button>
+        <button class="listen-btn" id="lq-hear" aria-label="השמע שוב">🔊</button>
       </div>
-      <div class="q-text">מה שמעת?</div>
-      <div class="q-sub">לחץ/י על הרמקול, אז בחר/י את הציור הנכון</div>
+      <div class="q-sub" id="lq-reveal">לחצו על הרמקול ובחרו את הציור הנכון</div>
     </div>
     <div class="opts-grid" id="lq-opts">
-      ${opts.map(o=>`<button class="opt emoji-opt" data-v="${o.en}">${o.emoji}</button>`).join('')}
+      ${opts.map(o=>`<button class="opt emoji-opt big-opt" data-v="${o.en}">${o.emoji}</button>`).join('')}
     </div>`;
-  document.querySelectorAll('#lq-opts .opt').forEach(btn => {
-    btn.onclick = () => checkListenQ(btn, w);
-  });
-  setTimeout(() => speak(w.en), 400);
+  document.getElementById('lq-hear').onclick = () => speak(w.en);
+  document.querySelectorAll('#lq-opts .opt').forEach(btn => { btn.onclick = () => checkListenQ(btn, w); });
+  setTimeout(() => { if(lastScreen==='listen-quiz') speak(w.en); }, 400);
 }
 
 function checkListenQ(btn, word){
-  if(answered) return; answered = true;
-  document.querySelectorAll('#lq-opts .opt').forEach(b=>b.style.pointerEvents='none');
+  if(answered) return;
+  const reveal = document.getElementById('lq-reveal');
+  const showWord = () => { reveal.innerHTML = `<strong style="font-family:'Fredoka One',cursive;font-size:1.4rem;direction:ltr;display:inline-block">${word.en}</strong> ${word.emoji} = ${word.he}`; };
   if(btn.dataset.v === word.en){
-    btn.classList.add('correct'); lqScore++; addStars(1);
-    setTimeout(()=>{ lqIdx++; buildListenQ(); }, 1200);
+    answered = true;
+    document.querySelectorAll('#lq-opts .opt').forEach(b=>b.style.pointerEvents='none');
+    btn.classList.add('correct'); showWord();
+    if(lqMiss === 0){ lqScore++; addStars(1); }
+    setTimeout(()=>{ lqIdx++; buildListenQ(); }, 1500);
+    return;
+  }
+  lqMiss++;
+  btn.classList.add('wrong'); btn.style.pointerEvents = 'none';
+  if(lqMiss >= 2){
+    answered = true;
+    document.querySelectorAll('#lq-opts .opt').forEach(b=>{ b.style.pointerEvents='none'; if(b.dataset.v===word.en) b.classList.add('correct'); });
+    showWord(); speak(word.en);
+    setTimeout(()=>{ lqIdx++; buildListenQ(); }, 2200);
   } else {
-    btn.classList.add('wrong');
-    document.querySelectorAll('#lq-opts .opt').forEach(b=>{ if(b.dataset.v===word.en) b.classList.add('correct'); });
-    speak(word.en);
-    appendFeedback(document.getElementById('listen-quiz-q'),
-      `המילה הנכונה: <strong>${word.en}</strong> ${word.emoji} = ${word.he}`,
-      ()=>{ lqIdx++; buildListenQ(); });
+    reveal.textContent = 'לא בדיוק — הקשיבו שוב 👂';
+    setTimeout(() => speak(word.en), 350);
+  }
+}
+
+// ── 2. SPEED ROUND ───────────────────────────────────────────
+let spTimer = null, spLeft = 60, spScore = 0, spCombo = 0, spBestCombo = 0, spQueue = [], spWord = null, spActive = false;
+const SPEED_SECONDS = 60;
+
+function startSpeed(){
+  lastScreen = 'speed';
+  spLeft = SPEED_SECONDS; spScore = 0; spCombo = 0; spBestCombo = 0; spQueue = []; spActive = true;
+  clearInterval(spTimer);
+  document.getElementById('spp').style.width = '100%';
+  document.getElementById('spl').textContent = spLeft;
+  document.getElementById('speed-q').innerHTML = `
+    <div class="speed-hud"><div>⭐ <b id="sp-score">0</b></div><div id="sp-combo" class="sp-combo"></div></div>
+    <div class="q-card" style="padding:14px">
+      <div style="text-align:center"><button class="listen-btn" id="sp-hear" aria-label="השמע שוב" style="width:76px;height:76px;font-size:2.4rem;margin:0 auto">🔊</button></div>
+    </div>
+    <div class="opts-grid" id="sp-opts"></div>`;
+  document.getElementById('sp-hear').onclick = () => { if(spWord) speak(spWord.en); };
+  nextSpeed();
+  spTimer = setInterval(() => {
+    spLeft--;
+    document.getElementById('spp').style.width = Math.round(spLeft/SPEED_SECONDS*100)+'%';
+    document.getElementById('spl').textContent = Math.max(spLeft,0);
+    if(spLeft <= 0) endSpeed();
+  }, 1000);
+}
+
+function nextSpeed(){
+  if(!spQueue.length) spQueue = shuffle(gameTargets());
+  spWord = spQueue.pop();
+  const opts = gameOptions(spWord, 4);
+  const box = document.getElementById('sp-opts');
+  box.innerHTML = opts.map(o=>`<button class="opt emoji-opt big-opt" data-v="${o.en}">${o.emoji}</button>`).join('');
+  box.querySelectorAll('.opt').forEach(btn => { btn.onclick = () => checkSpeed(btn); });
+  speak(spWord.en, 0.9);
+}
+
+function checkSpeed(btn){
+  if(!spActive) return;
+  if(btn.dataset.v === spWord.en){
+    spScore++; spCombo++; spBestCombo = Math.max(spBestCombo, spCombo);
+    document.getElementById('sp-score').textContent = spScore;
+    document.getElementById('sp-combo').textContent = spCombo >= 3 ? `🔥 ×${spCombo}` : '';
+    btn.classList.add('correct');
+    document.querySelectorAll('#sp-opts .opt').forEach(b=>b.style.pointerEvents='none');
+    setTimeout(() => { if(spActive) nextSpeed(); }, 350);
+  } else {
+    spCombo = 0; document.getElementById('sp-combo').textContent = '';
+    btn.classList.add('wrong'); btn.style.pointerEvents = 'none';
+    speak(spWord.en, 0.9);
+  }
+}
+
+function endSpeed(){
+  clearInterval(spTimer); spActive = false;
+  const s = spScore >= 12 ? 3 : spScore >= 6 ? 2 : 1;
+  const prev = appData.speedBest || 0;
+  const isBest = spScore > prev;
+  if(isBest){ appData.speedBest = spScore; persist(); }
+  if(spScore >= 12) checkBadge('speed_star');
+  gameDone();
+  addStars(s);
+  showComplete(s, `⚡ ${spScore} מילים ב-${SPEED_SECONDS} שניות! ` + (isBest && spScore > 0 ? 'שיא חדש! 🎉' : `השיא שלך: ${Math.max(prev, spScore)}`));
+}
+
+// ── 3. SAY IT! (microphone) ──────────────────────────────────
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const NUM_WORDS = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
+let siList = [], siIdx = 0, siScore = 0, siTries = 0, siRec = null, siBusy = false;
+
+function normWord(s){
+  return s.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()
+    .split(' ').map(x => (/^\d+$/.test(x) && NUM_WORDS[+x]) ? NUM_WORDS[+x] : x).join(' ');
+}
+function lev(a,b){
+  const d = Array.from({length:a.length+1}, (_,i) => [i]);
+  for(let j=1;j<=b.length;j++) d[0][j] = j;
+  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++)
+    d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return d[a.length][b.length];
+}
+// Kind to small voices: accept the word inside a phrase ("a cat") and, for longer words, one letter off.
+function matchWord(heard, target){
+  const h = normWord(heard), t = normWord(target);
+  if(!h) return false;
+  if(h === t || (' '+h+' ').includes(' '+t+' ')) return true;
+  return t.length >= 4 && lev(h, t) <= 1;
+}
+
+function startSayIt(){
+  lastScreen = 'sayit';
+  siList = shuffle(gameTargets()).slice(0,8); siIdx = 0; siScore = 0;
+  if(!SR){
+    document.getElementById('sayit-q').innerHTML = `
+      <div class="q-card"><span class="big-pic">🎤</span>
+        <div class="q-text">הדפדפן הזה לא יודע להקשיב</div>
+        <div class="q-sub">נסו ב-Chrome או Safari, או שחקו עם התוכי 🦜</div>
+        <div class="btn-row" style="margin-top:14px"><button class="btn-primary" onclick="go('echo')">🦜 לתוכי</button></div>
+      </div>`;
+    document.getElementById('sip').style.width = '0%'; document.getElementById('sil').textContent = '';
+    return;
+  }
+  buildSayIt();
+}
+
+function buildSayIt(){
+  if(siIdx >= siList.length){
+    const s = siScore >= 7 ? 3 : siScore >= 4 ? 2 : 1;
+    if(siScore >= 6) checkBadge('talker');
+    gameDone(); addStars(s);
+    showComplete(s, `אמרתם נכון ${siScore} מתוך ${siList.length}!`); return;
+  }
+  const w = siList[siIdx]; siTries = 0; siBusy = false;
+  document.getElementById('sip').style.width = Math.round(siIdx/siList.length*100)+'%';
+  document.getElementById('sil').textContent = siIdx+'/'+siList.length;
+  document.getElementById('sayit-q').innerHTML = `
+    <div class="q-card">
+      <div class="q-badge" style="background:var(--coral)">🎤 תגידו את זה!</div>
+      <span class="big-pic">${w.emoji}</span>
+      <div class="game-row">
+        <button class="listen-btn small" id="si-hear" aria-label="השמע">🔊</button>
+        <button class="mic-btn" id="si-mic" aria-label="דברו">🎤</button>
+      </div>
+      <div class="si-status" id="si-status">שומעים 🔊 ואז לוחצים על המיקרופון ואומרים</div>
+    </div>
+    <div class="btn-row"><button class="btn-secondary" id="si-skip">דלגו ➡️</button></div>`;
+  document.getElementById('si-hear').onclick = () => speak(w.en);
+  document.getElementById('si-mic').onclick  = () => siListen(w);
+  document.getElementById('si-skip').onclick = () => { siIdx++; buildSayIt(); };
+  setTimeout(() => { if(lastScreen==='sayit') speak(w.en); }, 400);
+}
+
+function siStatus(html){ const el = document.getElementById('si-status'); if(el) el.innerHTML = html; }
+function siMic(on){ const m = document.getElementById('si-mic'); if(m) m.classList.toggle('listening', on); }
+
+function siListen(w){
+  if(siBusy) return;
+  if(window.speechSynthesis) speechSynthesis.cancel();   // so the mic does not hear the app
+  let rec;
+  try { rec = new SR(); } catch(e){ siStatus('אי אפשר להפעיל את המיקרופון'); return; }
+  rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 5; rec.continuous = false;
+  siRec = rec; siBusy = true; siMic(true); siStatus('מקשיבים... 👂');
+  let got = false;
+  rec.onresult = e => {
+    got = true;
+    const alts = Array.from(e.results[0]).map(a => a.transcript);
+    siBusy = false; siMic(false);
+    siJudge(w, alts);
+  };
+  rec.onerror = e => {
+    siBusy = false; siMic(false);
+    if(e.error === 'not-allowed' || e.error === 'service-not-allowed') siStatus('צריך לאשר גישה למיקרופון בדפדפן 🙏');
+    else if(e.error === 'network') siStatus('אין אינטרנט — זיהוי הקול צריך חיבור');
+    else if(e.error !== 'aborted') siStatus('לא שמענו — נסו שוב 🎤');
+  };
+  rec.onend = () => { siMic(false); if(!got && siBusy){ siBusy = false; siStatus('לא שמענו — נסו שוב 🎤'); } };
+  try { rec.start(); } catch(err){ siBusy = false; siMic(false); }
+}
+
+function siJudge(w, alts){
+  if(alts.some(a => matchWord(a, w.en))){
+    siScore++; addStars(1);
+    siStatus(`🌟 מעולה! <strong>${w.en}</strong> = ${w.he}`);
+    setTimeout(() => { siIdx++; buildSayIt(); }, 1700);
+  } else {
+    siTries++;
+    if(siTries >= 2){
+      siStatus(`זה <strong>${w.en}</strong> = ${w.he}. נתאמן עוד! 💪`);
+      speak(w.en, 0.7);
+      setTimeout(() => { siIdx++; buildSayIt(); }, 2800);
+    } else {
+      siStatus('כמעט! הקשיבו ונסו שוב 💪');
+      setTimeout(() => speak(w.en, 0.75), 400);
+    }
+  }
+}
+
+// ── 4. ECHO PARROT (no microphone needed) ────────────────────
+let ecList = [], ecIdx = 0, ecTok = 0;
+
+function startEcho(){
+  lastScreen = 'echo';
+  ecList = shuffle(gameTargets()).slice(0,8); ecIdx = 0;
+  buildEcho();
+}
+
+function ecSay(w, rate){
+  const tok = ++ecTok;
+  const bubble = document.getElementById('ec-bubble');
+  const next = document.getElementById('ec-next');
+  if(bubble) bubble.textContent = '🦜 ...מקשיבים';
+  const ready = () => {
+    if(tok !== ecTok) return;
+    if(bubble) bubble.textContent = 'עכשיו אתם! אמרו בקול 🗣️';
+    if(next) next.disabled = false;
+  };
+  speak(w.en, rate, ready);
+  setTimeout(ready, 3500);   // some browsers never fire "speech ended" — never leave the child stuck
+}
+
+function buildEcho(){
+  if(ecIdx >= ecList.length){
+    gameDone(); addStars(2);
+    showComplete(2, 'התוכי גאה בכם! 🦜'); return;
+  }
+  const w = ecList[ecIdx];
+  document.getElementById('ecp').style.width = Math.round(ecIdx/ecList.length*100)+'%';
+  document.getElementById('ecl').textContent = ecIdx+'/'+ecList.length;
+  document.getElementById('echo-q').innerHTML = `
+    <div class="q-card">
+      <div class="q-badge" style="background:var(--grass)">🦜 התוכי החוזר</div>
+      <span class="big-pic">${w.emoji}</span>
+      <div class="parrot-bubble" id="ec-bubble"></div>
+      <div class="flash-word" style="font-size:2.2rem;margin-top:10px">${w.en}</div>
+      <div class="q-sub">${w.he}</div>
+      <div class="game-row">
+        <button class="listen-btn small" id="ec-hear" aria-label="השמע">🔊</button>
+        <button class="listen-btn small" id="ec-slow" aria-label="לאט">🐢</button>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn-primary" id="ec-next" disabled>✅ אמרתי!</button></div>`;
+  document.getElementById('ec-hear').onclick = () => ecSay(w, 0.82);
+  document.getElementById('ec-slow').onclick = () => ecSay(w, 0.5);
+  document.getElementById('ec-next').onclick = () => { ecTok++; ecIdx++; buildEcho(); };
+  setTimeout(() => { if(lastScreen==='echo') ecSay(w, 0.6); }, 400);
+}
+
+// ── 5. BALLOON POP ───────────────────────────────────────────
+let blList = [], blIdx = 0, blMiss = 0, blTimer = null, blWord = null, blLocked = false;
+const BALLOON_COLORS = ['#EF5350','#42A5F5','#66BB6A','#FFA726','#AB47BC','#EC407A'];
+
+function startBalloons(){
+  lastScreen = 'balloons';
+  blList = shuffle(gameTargets()).slice(0,8); blIdx = 0; blMiss = 0;
+  buildBalloons();
+}
+
+function buildBalloons(){
+  clearInterval(blTimer); blTimer = null;
+  if(blIdx >= blList.length){
+    const s = blMiss <= 2 ? 3 : blMiss <= 5 ? 2 : 1;
+    gameDone(); addStars(s);
+    showComplete(s, `פוצצתם ${blList.length} בלונים! 🎈`); return;
+  }
+  blWord = blList[blIdx]; blLocked = false;
+  document.getElementById('blp').style.width = Math.round(blIdx/blList.length*100)+'%';
+  document.getElementById('bll').textContent = blIdx+'/'+blList.length;
+  document.getElementById('balloon-q').innerHTML = `
+    <div class="q-card" style="padding:12px">
+      <div style="text-align:center"><button class="listen-btn" id="bl-hear" aria-label="השמע שוב" style="width:70px;height:70px;font-size:2.2rem;margin:0 auto">🔊</button></div>
+      <div class="q-sub" style="margin-top:6px">פוצצו את הבלון עם הציור הנכון! 🎈</div>
+    </div>
+    <div class="balloon-field" id="bl-field"></div>`;
+  const field = document.getElementById('bl-field');
+  const slots = shuffle([1, 20, 39, 58, 77]);
+  gameOptions(blWord, 5).forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'balloon';
+    b.style.cssText = `left:${slots[i]}%;background:${BALLOON_COLORS[i % BALLOON_COLORS.length]};animation-duration:${11 + Math.random()*5}s;animation-delay:-${(Math.random()*9).toFixed(1)}s`;
+    b.innerHTML = `<span class="b-emoji">${o.emoji}</span>`;
+    b.dataset.v = o.en;
+    b.onclick = () => popBalloon(b, field);
+    field.appendChild(b);
+  });
+  document.getElementById('bl-hear').onclick = () => speak(blWord.en);
+  setTimeout(() => { if(lastScreen==='balloons') speak(blWord.en); }, 400);
+  blTimer = setInterval(() => { if(!blLocked) speak(blWord.en); }, 8000);
+}
+
+function popBalloon(b, field){
+  if(blLocked) return;
+  if(b.dataset.v === blWord.en){
+    blLocked = true;
+    const r = b.getBoundingClientRect(), f = field.getBoundingClientRect();
+    b.style.top = (r.top - f.top) + 'px';       // freeze where it was, then pop
+    b.classList.add('pop');
+    speak(blWord.en, 0.8);
+    setTimeout(() => { blIdx++; buildBalloons(); }, 1300);
+  } else {
+    blMiss++;
+    const e = b.querySelector('.b-emoji');
+    e.classList.remove('wobble'); void e.offsetWidth; e.classList.add('wobble');
+    setTimeout(() => { if(!blLocked) speak(blWord.en); }, 300);
   }
 }
 
@@ -1188,7 +1672,7 @@ function checkScramble(){
       const el = document.getElementById('sc-answer');
       if(el) el.innerHTML = correct.split(' ').map(w=>`<span class="word-tile tile-correct" style="cursor:default">${w}</span>`).join('');
       speak(sentence.en);
-      appendFeedback(document.getElementById('scramble-content'),
+      appendFeedback(document.getElementById('scramble-q'),
         `המשפט הנכון: <strong>${correct}</strong>`,
         ()=>{ scIdx++; buildScrambleQ(); });
     }, 700);
@@ -1324,6 +1808,7 @@ function checkReadingQ(btn, correct, he, emoji){
 // ── NAV BAR ──────────────────────────────────────────────────
 const NAV_ITEMS = [
   { id:'home',     emoji:'🏠', label:'בית',    screen:'home' },
+  { id:'games',    emoji:'🎮', label:'משחקים', screen:'games' },
   { id:'alphabet', emoji:'🔤', label:'אלפבית', screen:'alphabet' },
   { id:'vocab',    emoji:'📚', label:'מילים',  screen:'vocab-menu' },
   { id:'reading',  emoji:'📖', label:'קריאה',  screen:'reading-menu' },
@@ -1340,7 +1825,7 @@ const SCREEN_TO_NAV = {
   'grammar-menu':'grammar', 'grammar':'grammar',
 
 
-  'word-quiz':'vocab', 'sent-quiz':'speaking', 'listen-quiz':'vocab', 'scramble':'speaking', 'complete':'home',
+  'word-quiz':'vocab', 'sent-quiz':'speaking', 'listen-quiz':'games', 'games':'games', 'speed':'games', 'sayit':'games', 'echo':'games', 'balloons':'games', 'scramble':'speaking', 'complete':'home',
   'alpha-quiz':'alphabet',
   'reading-menu':'reading', 'reading':'reading',
 };
